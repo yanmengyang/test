@@ -126,6 +126,7 @@ class fudai_analyse:
         sys.stdout = Tee(sys.stdout, log_file)
         self.last_find_fudai_time = 0.0
         self.ocr = PaddleOCR(use_angle_cls=True, lang="ch")
+        self.all = True  # 是否抢所有福袋
 
     # 已修改
     def get_screenshot(self, path='pic'):
@@ -666,9 +667,11 @@ class fudai_analyse:
         contains_want = ["鱼竿", "钓杆", "钓竿", "浮漂", "鱼漂", "支架", "炮台", "钓椅", "钓箱", "饵料"]
         if self.get_current_hour() < 7:
             return False
-        # for contain in contains_want:
-        #     if contain in contains:
-        #         return False
+        if self.all:
+            return False
+        for contain in contains_want:
+            if contain in contains:
+                return False
         for contain in contains_not_want:
             if contain in contains:
                 return True
