@@ -1,23 +1,3 @@
-from appium.options.android import UiAutomator2Options
-from appium import webdriver
-
-
-def app_driver():
-    desired_caps = {
-        "platformName": "Android",  # 操作系统
-        "automationName": "UiAutomator2",
-        "deviceName": "CTVVB21203008854",  # 设备 ID
-        "platformVersion": "12",  # 设备版本号
-        "appPackage": "com.ss.android.ugc.aweme",  # app 包名
-        "appActivity": ".splash.SplashActivity",  # app 启动时主 Activity
-        'noReset': True,  # 是否保留 session 信息，可以避免重新登录
-        # 'unicodeKeyboard': True,  # 使用 unicodeKeyboard 的编码方式来发送字符串
-        # 'resetKeyboard': True  # 将键盘给隐藏起来
-    }
-    return webdriver.Remote('http://localhost:4723/wd/hub',
-                            options=UiAutomator2Options().load_capabilities(desired_caps))
-
-
 # 把滑动操作封装成一个工具类
 class AppSwipe:
 

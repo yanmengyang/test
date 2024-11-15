@@ -1,5 +1,6 @@
 import time
 from douyin_fudai import fudai_analyse
+from adb_driver import select_device
 
 
 class fudai_guaji:
@@ -8,12 +9,12 @@ class fudai_guaji:
 
     def guaji(self, y_pianyi=0, y_resolution=2453):
         """根据自己截图的实际情况，修改y轴即高度的偏移值"""
-        device_id = self.analyser.select_device()
+        device_id = select_device()
         if device_id:
             self.analyser.fudai_choujiang(device_id, y_pianyi, y_resolution, True, 5)
             return True
         time.sleep(10)
-        self.guaji(y_pianyi)
+        self.guaji(y_pianyi, y_resolution)
 
 
 if __name__ == '__main__':

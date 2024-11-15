@@ -2,7 +2,8 @@ import time
 
 from selenium.webdriver.common.by import By
 
-from driver_swipe import AppSwipe, app_driver
+from adb_driver import select_device, connect_douyin
+from app_swipe import AppSwipe
 
 
 def find_result():
@@ -32,7 +33,8 @@ def take_part():
 
 
 if __name__ == '__main__':
-    driver = app_driver()
+    driverid = select_device()
+    driver = connect_douyin(driverid)
     time.sleep(1)
 
     driver.find_element(By.XPATH, "//*[@text='关注']").click()
