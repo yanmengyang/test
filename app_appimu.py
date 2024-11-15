@@ -37,6 +37,7 @@ if __name__ == '__main__':
     driver.implicitly_wait(1)
     living_list_size = driver.find_element(By.ID,
                                            "com.ss.android.ugc.aweme:id/b=n").size  # {'height': 2110, 'width': 1133}
+    # print(living_list_size.get('width'), living_list_size.get('height'))
     os.system(
-        "adb -s {} shell input tap {} {}".format(device_id, living_list_size.get('weight') / 3,
-                                                 living_list_size.get('height') / 4))
+        "adb -s {} shell input tap {} {}".format(device_id, living_list_size.get('width') // 3,
+                                                 living_list_size.get('height') // 4))
