@@ -9,6 +9,18 @@ from datetime import datetime, timedelta
 from PIL import Image
 from paddleocr import PaddleOCR
 
+class coordinate(object):
+    """坐标集合"""
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def middle_x(self):
+        return self.x / 2
+
+    def middle_y(self):
+        return self.y / 2
+
 
 class Tee(object):
     """重写print的函数"""

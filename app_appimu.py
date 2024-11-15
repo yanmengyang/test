@@ -1,51 +1,42 @@
-import time
+import json
+import os
 
 from selenium.webdriver.common.by import By
 
 from adb_driver import select_device, connect_douyin
-from app_swipe import AppSwipe
 
 
-def find_result():
-    while True:
-        try:
-            driver.find_element(By.XPATH, "//*[@text='我知道了']").click()
-            break
-        except:
-            time.sleep(30)
-
-
-def take_part():
-    time.sleep(10)
-    while True:
-        try:
-            super_fudai = driver.find_element(By.XPATH, "//*[contains(text(), '超级福袋')]")
-            super_fudai.click()
-            need_join_fans = driver.find_element(By.XPATH, "//*[@text='加入直播粉丝团未达成')]")
-            if need_join_fans is not None:
-                break
-            driver.find_element(By.XPATH, "//*[@text='一键发表评论']").click()
-            find_result()
-        except:
-            AppSwipe(driver).swipeTap()
-            AppSwipe(driver).swipeUp()
-            take_part()
+def get_window_size():
+    size = os.popen("adb -s {} shell wm size".format(device_id)).read()
+    size = size.split("\n")
+    for x in size:
+        if 'Override size' in x:
+            window_size = x.split(":")[1].strip().split("x")
+            return window_size[0], window_size[1]
+    return driver.get_window_size()['width'], driver.get_window_size()['height']
 
 
 if __name__ == '__main__':
-    driverid = select_device()
-    driver = connect_douyin(driverid)
-    time.sleep(1)
+    device_id = select_device()
+    driver = connect_douyin(device_id)
+    width, height = get_window_size()
 
-    driver.find_element(By.XPATH, "//*[@text='关注']").click()
-    time.sleep(1)
+    # 我的
+    driver.implicitly_wait(1)
+    driver.find_element(By.XPATH, "//*[@text='我']").click()
 
-    while True:
-        try:
-            driver.find_element(By.XPATH, "//*[@text='点击进入直播间']").click()
-            break
-        except:
-            AppSwipe(driver).swipeUp()
+    # 关注
+    driver.implicitly_wait(1)
+    driver.find_element(By.ID, "com.ss.android.ugc.aweme:id/3ey").click()
 
-    # 参与福袋
-    take_part()
+    # 直播中
+    driver.implicitly_wait(1)
+    driver.find_element(By.XPATH, "//*[@text='直播中']").click()
+
+    # 正在直播
+    driver.implicitly_wait(1)
+    living_list_size = driver.find_element(By.ID,
+                                           "com.ss.android.ugc.aweme:id/b=n").size  # {'height': 2110, 'width': 1133}
+    os.system(
+        "adb -s {} shell input tap {} {}".format(device_id, living_list_size.get('weight') / 3,
+                                                 living_list_size.get('height') / 4))
