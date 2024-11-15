@@ -1,15 +1,12 @@
 import json
 import os
+import re
+import subprocess
 import sys
 import time
-import re
-
-import numpy as np
-from PIL import Image, ImageFilter
-import pytesseract
-import subprocess
 from datetime import datetime, timedelta
 
+from PIL import Image
 from paddleocr import PaddleOCR
 
 
@@ -27,6 +24,16 @@ class Tee(object):
     def flush(self):
         for f in self.files:
             f.flush()
+
+
+def save_log():
+    """保存日志"""
+    log_path = os.path.dirname(__file__) + '/log/'
+    if not os.path.exists(log_path):
+        os.makedirs(log_path)
+    log_time = datetime.now().strftime('%Y-%m-%d-%H-%M')
+    log_file = open(log_path + log_time + '.log', 'w')
+    sys.stdout = Tee(sys.stdout, log_file)
 
 
 class fudai_analyse:
@@ -121,11 +128,9 @@ class fudai_analyse:
         self.y_pianyi = 0  # 应用于不同型号手机，图标相对屏幕的高度位置有偏差
         self.resolution_ratio_x = 1133
         self.resolution_ratio_y = 2453
-        time_log = datetime.now().strftime('%Y-%m-%d-%H-%M')
-        log_file = open(time_log + '.log', 'w')
-        sys.stdout = Tee(sys.stdout, log_file)
         self.last_find_fudai_time = 0.0
         self.ocr = PaddleOCR(use_angle_cls=True, lang="ch")
+        save_log()  # 保存日志
         self.all = True  # 是否抢所有福袋
 
     # 已修改
